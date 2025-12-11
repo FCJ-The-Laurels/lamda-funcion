@@ -1,0 +1,15 @@
+{
+  "name": "admin-operations-lambda",
+  "version": "1.0.0",
+  "description": "Lambda function for admin operations - manage coaches in Cognito",
+  "main": "manage-coaches.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.700.0"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "MIT"
+}

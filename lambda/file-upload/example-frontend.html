@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload Example - LeafLungs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #666;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .upload-area {
+      border: 3px dashed #667eea;
+      border-radius: 15px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .upload-area:hover {
+      border-color: #764ba2;
+      background: #f8f9ff;
+    }
+
+    .upload-area.dragging {
+      border-color: #764ba2;
+      background: #f0f2ff;
+    }
+
+    .upload-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-info {
+      background: #f8f9ff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .file-info.show {
+      display: block;
+    }
+
+    .file-name {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .file-size {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 30px;
+      background: #f0f0f0;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .progress-bar.show {
+      display: block;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      width: 0%;
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      transition: transform 0.2s;
+      margin-bottom: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result.error {
+      background: #ffebee;
+      border-left-color: #f44336;
+    }
+
+    .result-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #4caf50;
+    }
+
+    .result.error .result-title {
+      color: #f44336;
+    }
+
+    .result-url {
+      word-break: break-all;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .copy-btn {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
+    .copy-btn:hover {
+      background: #45a049;
+    }
+
+    .supported-types {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .supported-types h3 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .type-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .type-tag {
+      background: #f0f2ff;
+      color: #667eea;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 File Upload Demo</h1>
+    <p class="subtitle">Upload any file type to AWS S3</p>
+
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon">📁</div>
+      <p><strong>Click to select file</strong></p>
+      <p style="margin-top: 10px; color: #999; font-size: 14px;">
+        or drag and drop here
+      </p>
+      <input type="file" id="fileInput" accept="*/*">
+    </div>
+
+    <div class="file-info" id="fileInfo">
+      <div class="file-name" id="fileName"></div>
+      <div class="file-size" id="fileSize"></div>
+    </div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill">0%</div>
+    </div>
+
+    <button class="btn" id="uploadBtn" disabled>Upload File</button>
+
+    <div class="result" id="result">
+      <div class="result-title" id="resultTitle"></div>
+      <div id="resultMessage"></div>
+      <div class="result-url" id="resultUrl"></div>
+      <button class="copy-btn" id="copyBtn" style="display: none;">Copy URL</button>
+    </div>
+
+    <div class="supported-types">
+      <h3>📋 Supported File Types:</h3>
+      <div class="type-tags">
+        <span class="type-tag">Images (PNG, JPG, GIF)</span>
+        <span class="type-tag">Documents (PDF, DOCX)</span>
+        <span class="type-tag">Audio (MP3, WAV)</span>
+        <span class="type-tag">Video (MP4, AVI)</span>
+        <span class="type-tag">Text (TXT, JSON)</span>
+        <span class="type-tag">Archives (ZIP, RAR)</span>
+      </div>
+      <p style="margin-top: 15px; font-size: 12px; color: #999;">
+        Max file size: 50MB
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ IMPORTANT: Replace with your actual API Gateway endpoint
+    const LAMBDA_API_ENDPOINT = 'YOUR_API_GATEWAY_ENDPOINT_HERE';
+
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const result = document.getElementById('result');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultMessage = document.getElementById('resultMessage');
+    const resultUrl = document.getElementById('resultUrl');
+    const copyBtn = document.getElementById('copyBtn');
+
+    let selectedFile = null;
+
+    // Upload area click
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // File selection
+    fileInput.addEventListener('change', handleFileSelect);
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragging');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragging');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragging');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        handleFileSelect();
+      }
+    });
+
+    // Upload button
+    uploadBtn.addEventListener('click', uploadFile);
+
+    // Copy button
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(resultUrl.textContent);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy URL';
+      }, 2000);
+    });
+
+    function handleFileSelect() {
+      selectedFile = fileInput.files[0];
+      if (!selectedFile) return;
+
+      // Show file info
+      fileName.textContent = selectedFile.name;
+      fileSize.textContent = formatFileSize(selectedFile.size);
+      fileInfo.classList.add('show');
+      uploadBtn.disabled = false;
+
+      // Hide result
+      result.classList.remove('show');
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    async function uploadFile() {
+      if (!selectedFile) return;
+
+      // Reset UI
+      uploadBtn.disabled = true;
+      result.classList.remove('show', 'error');
+      progressBar.classList.add('show');
+      setProgress(10);
+
+      try {
+        // Step 1: Get pre-signed URL from Lambda
+        setProgress(30);
+        const uploadData = await getUploadUrl(selectedFile);
+
+        if (!uploadData.success) {
+          throw new Error(uploadData.message || 'Failed to get upload URL');
+        }
+
+        // Step 2: Upload file to S3
+        setProgress(50);
+        await uploadToS3(uploadData.uploadUrl, selectedFile);
+
+        // Success!
+        setProgress(100);
+        showSuccess(uploadData.publicUrl);
+
+      } catch (error) {
+        console.error('Upload error:', error);
+        showError(error.message);
+      } finally {
+        uploadBtn.disabled = false;
+        setTimeout(() => {
+          progressBar.classList.remove('show');
+          setProgress(0);
+        }, 1000);
+      }
+    }
+
+    async function getUploadUrl(file) {
+      const response = await fetch(LAMBDA_API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contentType: file.type || 'application/octet-stream',
+          fileSize: file.size,
+          fileName: file.name
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return await response.json();
+    }
+
+    async function uploadToS3(uploadUrl, file) {
+      const response = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type || 'application/octet-stream',
+        },
+        body: file
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+    }
+
+    function setProgress(percent) {
+      progressFill.style.width = percent + '%';
+      progressFill.textContent = percent + '%';
+    }
+
+    function showSuccess(url) {
+      result.classList.add('show');
+      resultTitle.textContent = '✅ Upload Successful!';
+      resultMessage.textContent = 'Your file has been uploaded successfully.';
+      resultUrl.textContent = url;
+      resultUrl.style.display = 'block';
+      copyBtn.style.display = 'inline-block';
+    }
+
+    function showError(message) {
+      result.classList.add('show', 'error');
+      resultTitle.textContent = '❌ Upload Failed';
+      resultMessage.textContent = message;
+      resultUrl.style.display = 'none';
+      copyBtn.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "Variables": {
+    "MOMO_PARTNER_CODE": "MOMO",
+    "MOMO_ACCESS_KEY": "F8BBA842ECF85",
+    "MOMO_SECRET_KEY": "K951B6PE1waDMi640xX08PD3vg6EkVlz",
+    "MOMO_ENDPOINT": "https://test-payment.momo.vn/v2/gateway/api/create",
+    "BACKEND_API_URL": "http://leaflungs-userinfo-nlb-3c1d58c7a3d41477.elb.ap-southeast-1.amazonaws.com",
+    "BACKEND_API_KEY": "PTWICwqYmowWZfaiSnezhNxE4UmZgF-AWaFoaby7f8o",
+    "FRONTEND_REDIRECT_URL": "https://d2yo2hr161ib8h.cloudfront.net/payment/callback",
+    "IPN_URL": "https://v7agf76rrh.execute-api.ap-southeast-1.amazonaws.com/prod/payment/momo/ipn"
+  }
+}

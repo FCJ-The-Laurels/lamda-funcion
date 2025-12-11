@@ -1,0 +1,17 @@
+{
+  "body": "{\"packageType\":\"PREMIUM\",\"amount\":50000}",
+  "requestContext": {
+    "authorizer": {
+      "claims": {
+        "sub": "test-user-550e8400-e29b-41d4-a716-446655440000",
+        "cognito:groups": "User",
+        "email": "testuser@leaflungs.com"
+      }
+    }
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "httpMethod": "POST",
+  "path": "/payment/momo/create"
+}

@@ -1,0 +1,21 @@
+{
+  "name": "momo-payment-creation",
+  "version": "1.0.0",
+  "description": "Lambda function for creating MoMo payment requests",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "momo",
+    "payment",
+    "lambda",
+    "aws"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2"
+  }
+}

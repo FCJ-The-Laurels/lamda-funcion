@@ -1,0 +1,8 @@
+{
+  "Variables": {
+    "MOMO_ACCESS_KEY": "F8BBA842ECF85",
+    "MOMO_SECRET_KEY": "K951B6PE1waDMi640xX08PD3vg6EkVlz",
+    "BACKEND_API_URL": "http://leaflungs-userinfo-nlb-3c1d58c7a3d41477.elb.ap-southeast-1.amazonaws.com",
+    "BACKEND_API_KEY": "PTWICwqYmowWZfaiSnezhNxE4UmZgF-AWaFoaby7f8o"
+  }
+}

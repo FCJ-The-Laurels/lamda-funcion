@@ -1,0 +1,23 @@
+{
+  "name": "file-upload-lambda",
+  "version": "1.0.0",
+  "description": "Lambda function for generating pre-signed URLs to upload files to S3",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.682.0",
+    "@aws-sdk/s3-request-presigner": "^3.682.0"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "s3",
+    "upload",
+    "presigned-url"
+  ],
+  "author": "LeafLungs Team",
+  "license": "MIT"
+}

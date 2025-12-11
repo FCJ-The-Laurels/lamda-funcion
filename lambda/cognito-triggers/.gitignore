@@ -1,0 +1,23 @@
+# Lambda deployment artifacts
+*.zip
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+trust-policy.json
+
+# AWS
+.aws/

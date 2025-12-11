@@ -1,0 +1,1 @@
+{"statusCode":200,"headers":{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"Content-Type,Authorization,X-User-Id,X-User-Group"},"body":"{\"coaches\":[{\"sub\":\"04a86468-2091-7020-59d9-eecc76a1bf54\",\"email\":\"hitechphutho@gmail.com\"}],\"nextToken\":null}"}
